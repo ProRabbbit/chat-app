@@ -1,9 +1,3 @@
-{
-  "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "chat-app",
-  "main": "src/index.js",
-  "compatibility_date": "2026-07-18"
-}
 
 {
   "$schema": "node_modules/wrangler/config-schema.json",
@@ -18,4 +12,11 @@
       "database_id": "ここにD1のID"
     }
   ]
+"d1_databases": [
+  {
+    "binding": "DB",
+    "database_name": "chat-db",
+    "database_id": "..."
+  }
+]
 }
