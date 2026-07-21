@@ -14,26 +14,27 @@
 
 <input
 type="text"
+id="username"
 placeholder="ユーザー名">
 
 <br><br>
 
 <input
 type="password"
+id="password"
 placeholder="パスワード">
 
 <br><br>
 
 <input
 type="password"
+id="password-confirm"
 placeholder="パスワード確認">
 
 <br><br>
 
-<button>
-
+<button onclick="register()">
 登録
-
 </button>
 
 <br><br>
@@ -50,7 +51,7 @@ placeholder="パスワード確認">
     const username = document.getElementById("username").value;
     const password = document.getElementById("password").value;
 
-    const response = await fetch("/api/register", {
+    const response = await fetch("https://chat-app.issounino.workers.dev/api/register", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ username, password })
