@@ -26,9 +26,9 @@ export default {
       const hash = await bcrypt.hash(password, 12);
 
 await env.DB.prepare(
-  "INSERT INTO users (username, password_hash) VALUES (?, ?)"
+  "INSERT INTO messages (chat_id, user_id, message) VALUES (?, ?, ?)"
 )
-.bind(username, hash)
+.bind(chat_id, user.id, message)
 .run();
 
       return new Response(
@@ -44,7 +44,7 @@ await env.DB.prepare(
 
     if (url.pathname === "/api/send" && request.method === "POST") {
 
-  const { username, message } = await request.json();
+  const { username, message, chat_id } = await request.json();
 
   const user = await env.DB.prepare(
     "SELECT id FROM users WHERE username = ?"
@@ -150,17 +150,22 @@ await env.DB.prepare(
 
 if (url.pathname === "/api/messages" && request.method === "GET") {
 
-  const messages = await env.DB.prepare(`
-    SELECT
-      messages.id,
-      users.username,
-      messages.message,
-      messages.created_at
-    FROM messages
-    JOIN users
-      ON messages.user_id = users.id
-    ORDER BY messages.created_at ASC
-  `).all();
+  const chatId = url.searchParams.get("chat_id");
+
+const messages = await env.DB.prepare(`
+SELECT
+    messages.id,
+    users.username,
+    messages.message,
+    messages.created_at
+FROM messages
+JOIN users
+    ON messages.user_id = users.id
+WHERE messages.chat_id = ?
+ORDER BY messages.created_at ASC
+`)
+.bind(chatId)
+.all();
 
   return new Response(
     JSON.stringify(messages.results),

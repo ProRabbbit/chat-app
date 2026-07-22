@@ -31,7 +31,7 @@ placeholder="メッセージを入力">
 <script>
 async function loadMessages() {
 
-    const response = await fetch("https://chat-app.issounino.workers.dev/api/messages");
+    const response = await fetch("https://chat-app.issounino.workers.dev/api/messages?chat_id=1");
 
     const messages = await response.json();
 
@@ -62,9 +62,10 @@ async function sendMessage() {
             "Content-Type": "application/json"
         },
         body: JSON.stringify({
-            username: "issou",
-            message: message
-        })
+    username: "issou",
+    chat_id: 1,
+    message: message
+})
     });
 
     const result = await response.json();
