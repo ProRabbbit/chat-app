@@ -35,6 +35,53 @@ export default {
       );
     }
 
+    if (url.pathname === "/api/login" && request.method === "POST") {
+
+  const { username, password } = await request.json();
+
+  const user = await env.DB.prepare(
+    "SELECT * FROM users WHERE username = ?"
+  )
+  .bind(username)
+  .first();
+
+  if (!user) {
+    return new Response(
+      JSON.stringify({ message: "ユーザーが存在しません" }),
+      {
+        status: 404,
+        headers: {
+          ...corsHeaders,
+          "Content-Type": "application/json"
+        }
+      }
+    );
+  }
+
+  if (user.password_hash !== password) {
+    return new Response(
+      JSON.stringify({ message: "パスワードが違います" }),
+      {
+        status: 401,
+        headers: {
+          ...corsHeaders,
+          "Content-Type": "application/json"
+        }
+      }
+    );
+  }
+
+  return new Response(
+    JSON.stringify({ message: "ログイン成功！" }),
+    {
+      headers: {
+        ...corsHeaders,
+        "Content-Type": "application/json"
+      }
+    }
+  );
+}
+
     return new Response("Not Found", {
       status: 404,
       headers: corsHeaders

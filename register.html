@@ -48,7 +48,6 @@ placeholder="パスワード確認">
 <!-- register.html の </body> 直前に追記してください -->
 <script>
   async function register() {
-    alert("register() が呼ばれました");
     const username = document.getElementById("username").value;
     const password = document.getElementById("password").value;
 
@@ -58,9 +57,7 @@ placeholder="パスワード確認">
       body: JSON.stringify({ username, password })
     });
 
-    console.log(response.status);
-    console.log(await response.text());
-
+  
     if (response.ok) {
       alert("登録成功しました！");
     } else {
