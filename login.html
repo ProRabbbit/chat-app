@@ -55,10 +55,10 @@ async function login() {
     const result = await response.json();
 
     if (response.ok) {
-        alert(result.message);
-    } else {
-        alert(result.message);
-    }
+    window.location.href = "chat.html";
+} else {
+    alert(result.message);
+}
 }
 </script>
 
