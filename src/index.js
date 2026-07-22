@@ -1,7 +1,12 @@
+import bcrypt from "bcryptjs";
+function generateToken() {
+  return crypto.randomUUID();
+}
 const corsHeaders = {
   "Access-Control-Allow-Origin": "https://chat-app-42g.pages.dev",
   "Access-Control-Allow-Methods": "POST, OPTIONS",
-  "Access-Control-Allow-Headers": "Content-Type"
+  "Access-Control-Allow-Headers": "Content-Type",
+  "Access-Control-Allow-Credentials": "true"
 };
 
 export default {
@@ -18,11 +23,13 @@ export default {
     if (url.pathname === "/api/register" && request.method === "POST") {
       const { username, password } = await request.json();
 
-      await env.DB.prepare(
-        "INSERT INTO users (username, password_hash) VALUES (?, ?)"
-      )
-      .bind(username, password)
-      .run();
+      const hash = await bcrypt.hash(password, 12);
+
+await env.DB.prepare(
+  "INSERT INTO users (username, password_hash) VALUES (?, ?)"
+)
+.bind(username, hash)
+.run();
 
       return new Response(
         JSON.stringify({ message: "登録成功" }),
@@ -34,6 +41,46 @@ export default {
         }
       );
     }
+
+    if (url.pathname === "/api/send" && request.method === "POST") {
+
+  const { username, message } = await request.json();
+
+  const user = await env.DB.prepare(
+    "SELECT id FROM users WHERE username = ?"
+  )
+  .bind(username)
+  .first();
+
+  if (!user) {
+    return new Response(
+      JSON.stringify({ message: "ユーザーが存在しません" }),
+      {
+        status: 404,
+        headers: {
+          ...corsHeaders,
+          "Content-Type": "application/json"
+        }
+      }
+    );
+  }
+
+  await env.DB.prepare(
+    "INSERT INTO messages (user_id, message) VALUES (?, ?)"
+  )
+  .bind(user.id, message)
+  .run();
+
+  return new Response(
+    JSON.stringify({ message: "送信成功" }),
+    {
+      headers: {
+        ...corsHeaders,
+        "Content-Type": "application/json"
+      }
+    }
+  );
+}
 
     if (url.pathname === "/api/login" && request.method === "POST") {
 
@@ -58,7 +105,9 @@ export default {
     );
   }
 
-  if (user.password_hash !== password) {
+  const ok = await bcrypt.compare(password, user.password_hash);
+
+if (!ok) {
     return new Response(
       JSON.stringify({ message: "パスワードが違います" }),
       {
@@ -71,15 +120,32 @@ export default {
     );
   }
 
+const token = generateToken();
+
+const expiresAt = new Date(
+  Date.now() + 30 * 24 * 60 * 60 * 1000
+).toISOString();
+
+await env.DB.prepare(
+  "INSERT INTO sessions (token, user_id, expires_at) VALUES (?, ?, ?)"
+)
+.bind(token, user.id, expiresAt)
+.run();
+
+
+
   return new Response(
-    JSON.stringify({ message: "ログイン成功！" }),
-    {
-      headers: {
-        ...corsHeaders,
-        "Content-Type": "application/json"
-      }
+  JSON.stringify({ message: "ログイン成功！" }),
+  {
+    headers: {
+      ...corsHeaders,
+      "Content-Type": "application/json",
+
+      "Set-Cookie":
+        `session=${token}; Path=/; Max-Age=2592000; HttpOnly; Secure; SameSite=Lax`
     }
-  );
+  }
+);
 }
 
     return new Response("Not Found", {
