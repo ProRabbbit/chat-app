@@ -1,21 +1,43 @@
+const corsHeaders = {
+  "Access-Control-Allow-Origin": "https://chat-app-42g.pages.dev",
+  "Access-Control-Allow-Methods": "POST, OPTIONS",
+  "Access-Control-Allow-Headers": "Content-Type"
+};
+
 export default {
   async fetch(request, env) {
-    // 登録APIのパスを確認
-    const url = new URL(request.url);
-    
-    if (url.pathname === "/api/register" && request.method === "POST") {
-      const { username, password } = await request.json();
-      
-      // D1への保存処理（後で書きます）
-      await env.DB.prepare(
-        "INSERT INTO users (username, password_hash) VALUES (?, ?)"
-      ).bind(username, password).run();
-
-      return new Response(JSON.stringify({ message: "登録成功" }), {
-        headers: { "Content-Type": "application/json" }
+    // ブラウザからの事前確認(OPTIONS)に応答
+    if (request.method === "OPTIONS") {
+      return new Response(null, {
+        headers: corsHeaders
       });
     }
 
-    return new Response("Not Found", { status: 404 });
+    const url = new URL(request.url);
+
+    if (url.pathname === "/api/register" && request.method === "POST") {
+      const { username, password } = await request.json();
+
+      await env.DB.prepare(
+        "INSERT INTO users (username, password_hash) VALUES (?, ?)"
+      )
+      .bind(username, password)
+      .run();
+
+      return new Response(
+        JSON.stringify({ message: "登録成功" }),
+        {
+          headers: {
+            ...corsHeaders,
+            "Content-Type": "application/json"
+          }
+        }
+      );
+    }
+
+    return new Response("Not Found", {
+      status: 404,
+      headers: corsHeaders
+    });
   }
 };
