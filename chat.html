@@ -12,11 +12,7 @@
 
 <h1>チャット</h1>
 
-<p>ようこそ！</p>
-
-<div id="messages">
-
-</div>
+<div id="messages"></div>
 
 <br>
 
@@ -29,7 +25,33 @@ placeholder="メッセージを入力">
 送信
 </button>
 
+<p>ようこそ！</p>
+
+
 <script>
+async function loadMessages() {
+
+    const response = await fetch("https://chat-app.issounino.workers.dev/api/messages");
+
+    const messages = await response.json();
+
+    const area = document.getElementById("messages");
+
+    area.innerHTML = "";
+
+    messages.forEach(msg => {
+
+        area.innerHTML += `
+            <p>
+                <strong>${msg.username}</strong><br>
+                ${msg.message}
+            </p>
+        `;
+
+    });
+
+}
+
 async function sendMessage() {
 
     const message = document.getElementById("message").value;
@@ -54,6 +76,8 @@ async function sendMessage() {
         alert(result.message);
     }
 }
+
+loadMessages();
 </script>
 
 </body>

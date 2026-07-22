@@ -148,6 +148,31 @@ await env.DB.prepare(
 );
 }
 
+if (url.pathname === "/api/messages" && request.method === "GET") {
+
+  const messages = await env.DB.prepare(`
+    SELECT
+      messages.id,
+      users.username,
+      messages.message,
+      messages.created_at
+    FROM messages
+    JOIN users
+      ON messages.user_id = users.id
+    ORDER BY messages.created_at ASC
+  `).all();
+
+  return new Response(
+    JSON.stringify(messages.results),
+    {
+      headers: {
+        ...corsHeaders,
+        "Content-Type": "application/json"
+      }
+    }
+  );
+}
+
     return new Response("Not Found", {
       status: 404,
       headers: corsHeaders
