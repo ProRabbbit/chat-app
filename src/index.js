@@ -148,6 +148,51 @@ await env.DB.prepare(
 );
 }
 
+if (url.pathname === "/api/chats" && request.method === "GET") {
+
+  const username = url.searchParams.get("username");
+
+  const user = await env.DB.prepare(
+    "SELECT id FROM users WHERE username = ?"
+  )
+  .bind(username)
+  .first();
+
+  if (!user) {
+    return new Response(
+      JSON.stringify({ message: "ユーザーが存在しません" }),
+      {
+        status: 404,
+        headers: {
+          ...corsHeaders,
+          "Content-Type": "application/json"
+        }
+      }
+    );
+  }
+
+  const chats = await env.DB.prepare(`
+    SELECT chats.id, chats.name, chats.type
+    FROM chats
+    JOIN chat_members
+      ON chats.id = chat_members.chat_id
+    WHERE chat_members.user_id = ?
+    ORDER BY chats.name
+  `)
+  .bind(user.id)
+  .all();
+
+  return new Response(
+    JSON.stringify(chats.results),
+    {
+      headers: {
+        ...corsHeaders,
+        "Content-Type": "application/json"
+      }
+    }
+  );
+}
+
 if (url.pathname === "/api/messages" && request.method === "GET") {
 
   const chatId = url.searchParams.get("chat_id");
