@@ -10,7 +10,37 @@
 
 <body>
 
-<h1>チャット</h1>
+<div id="topbar">
+
+    <div id="logo">
+        Chat App
+    </div>
+
+    <div id="account">
+
+        <button id="account-button" onclick="toggleAccountMenu()">
+            👤
+        </button>
+
+        <div id="account-menu">
+
+            <button onclick="openProfile()">
+                プロフィール
+            </button>
+
+            <button onclick="openSettings()">
+                設定
+            </button>
+
+            <button onclick="logout()">
+                ログアウト
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
 
 <div id="container">
 
@@ -250,6 +280,42 @@ async function deleteChat(chatId){
         alert(result.message);
 
     }
+
+}
+
+function toggleAccountMenu() {
+
+    const menu = document.getElementById("account-menu");
+
+    if (menu.style.display === "block") {
+        menu.style.display = "none";
+    } else {
+        menu.style.display = "block";
+    }
+
+}
+
+document.addEventListener("click", function(e) {
+
+    const account = document.getElementById("account");
+
+    if (!account.contains(e.target)) {
+
+        document.getElementById("account-menu").style.display = "none";
+
+    }
+
+});
+
+function openProfile() {
+
+    alert("プロフィール画面はこれから作成します。");
+
+}
+
+function openSettings() {
+
+    alert("設定画面はこれから作成します。");
 
 }
 

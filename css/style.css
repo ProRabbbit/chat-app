@@ -200,3 +200,82 @@ h1 {
     margin-left:15px;
 
 }
+
+#topbar{
+    height:60px;
+    background:#2d2d2d;
+    color:white;
+
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+
+    padding:0 20px;
+}
+
+#logo{
+    font-size:22px;
+    font-weight:bold;
+}
+
+#account{
+    position:relative;
+}
+
+#account-button{
+
+    width:40px;
+    height:40px;
+
+    border:none;
+    border-radius:50%;
+
+    cursor:pointer;
+
+    font-size:20px;
+}
+
+#account-menu{
+
+    display:none;
+
+    position:absolute;
+
+    right:0;
+    top:50px;
+
+    width:180px;
+
+    background:white;
+
+    border-radius:10px;
+
+    box-shadow:0 0 10px rgba(0,0,0,.25);
+
+    overflow:hidden;
+
+    z-index:1000;
+
+}
+
+#account-menu button{
+
+    width:100%;
+
+    border:none;
+
+    background:white;
+
+    padding:12px;
+
+    text-align:left;
+
+    cursor:pointer;
+
+}
+
+#account-menu button:hover{
+
+    background:#f3f3f3;
+
+}
