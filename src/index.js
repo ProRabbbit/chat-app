@@ -229,3 +229,57 @@ ORDER BY messages.created_at ASC
     });
   }
 };
+
+if (url.pathname === "/api/create-chat" && request.method === "POST") {
+
+  const { username, name } = await request.json();
+
+  // ユーザー取得
+  const user = await env.DB.prepare(
+    "SELECT id FROM users WHERE username = ?"
+  )
+  .bind(username)
+  .first();
+
+  if (!user) {
+    return new Response(
+      JSON.stringify({ message: "ユーザーが存在しません" }),
+      {
+        status: 404,
+        headers: {
+          ...corsHeaders,
+          "Content-Type": "application/json"
+        }
+      }
+    );
+  }
+
+  // チャット作成
+  const result = await env.DB.prepare(
+    "INSERT INTO chats (name, type) VALUES (?, ?)"
+  )
+  .bind(name, "group")
+  .run();
+
+  const chatId = result.meta.last_row_id;
+
+  // 作成者を参加させる
+  await env.DB.prepare(
+    "INSERT INTO chat_members (chat_id, user_id) VALUES (?, ?)"
+  )
+  .bind(chatId, user.id)
+  .run();
+
+  return new Response(
+    JSON.stringify({
+      message: "作成成功",
+      chat_id: chatId
+    }),
+    {
+      headers: {
+        ...corsHeaders,
+        "Content-Type": "application/json"
+      }
+    }
+  );
+}
