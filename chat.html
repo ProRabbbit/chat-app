@@ -138,51 +138,43 @@ loadMessages();
     }
 }
 
-async function createChat(){
+async function createChat() {
 
     console.log("createChatが呼ばれました");
 
     const name = prompt("グループ名を入力してください");
-    
+
     console.log(name);
-    
-    if(!name) return;
 
-    async function createChat(){
-
-    const name = prompt("グループ名を入力してください");
-
-    if(!name) return;
+    if (!name) return;
 
     console.log("fetch開始");
 
     const response = await fetch(
         "https://chat-app.issounino.workers.dev/api/create-chat",
         {
-            method:"POST",
-            headers:{
-                "Content-Type":"application/json"
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
             },
-            body:JSON.stringify({
-                username:"issou",
-                name:name
+            body: JSON.stringify({
+                username: "issou",
+                name: name
             })
         }
     );
 
-    if(response.ok){
+    if (response.ok) {
 
         loadChats();
 
-    }else{
+    } else {
 
         const result = await response.json();
 
         alert(result.message);
 
     }
-
-}
 
 }
 
