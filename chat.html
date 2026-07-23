@@ -141,6 +141,7 @@ loadMessages();
 async function createChat(){
 
     console.log("createChatが呼ばれました");
+    console.log(name);
 
     const name = prompt("グループ名を入力してください");
 
@@ -151,6 +152,8 @@ async function createChat(){
     const name = prompt("グループ名を入力してください");
 
     if(!name) return;
+
+    console.log("fetch開始");
 
     const response = await fetch(
         "https://chat-app.issounino.workers.dev/api/create-chat",
