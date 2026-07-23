@@ -197,7 +197,7 @@ if (url.pathname === "/api/messages" && request.method === "GET") {
 
   const chatId = url.searchParams.get("chat_id");
 
-const messages = await env.DB.prepare(`
+  const messages = await env.DB.prepare(`
 SELECT
     messages.id,
     users.username,
@@ -209,8 +209,8 @@ JOIN users
 WHERE messages.chat_id = ?
 ORDER BY messages.created_at ASC
 `)
-.bind(chatId)
-.all();
+  .bind(chatId)
+  .all();
 
   return new Response(
     JSON.stringify(messages.results),
@@ -222,13 +222,6 @@ ORDER BY messages.created_at ASC
     }
   );
 }
-
-    return new Response("Not Found", {
-      status: 404,
-      headers: corsHeaders
-    });
-  }
-};
 
 if (url.pathname === "/api/create-chat" && request.method === "POST") {
 
@@ -263,7 +256,7 @@ if (url.pathname === "/api/create-chat" && request.method === "POST") {
 
   const chatId = result.meta.last_row_id;
 
-  // 作成者を参加させる
+  // 作成者をメンバーに追加
   await env.DB.prepare(
     "INSERT INTO chat_members (chat_id, user_id) VALUES (?, ?)"
   )
@@ -283,3 +276,12 @@ if (url.pathname === "/api/create-chat" && request.method === "POST") {
     }
   );
 }
+
+// どのAPIにも一致しなかった場合
+return new Response("Not Found", {
+  status: 404,
+  headers: corsHeaders
+});
+
+  }
+};
