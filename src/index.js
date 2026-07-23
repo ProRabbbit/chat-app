@@ -285,3 +285,38 @@ return new Response("Not Found", {
 
   }
 };
+
+if (url.pathname === "/api/delete-chat" && request.method === "POST") {
+
+  const { chat_id } = await request.json();
+
+  await env.DB.prepare(
+    "DELETE FROM chat_members WHERE chat_id = ?"
+  )
+  .bind(chat_id)
+  .run();
+
+  await env.DB.prepare(
+    "DELETE FROM messages WHERE chat_id = ?"
+  )
+  .bind(chat_id)
+  .run();
+
+  await env.DB.prepare(
+    "DELETE FROM chats WHERE id = ?"
+  )
+  .bind(chat_id)
+  .run();
+
+  return new Response(
+    JSON.stringify({
+      message: "削除しました"
+    }),
+    {
+      headers: {
+        ...corsHeaders,
+        "Content-Type": "application/json"
+      }
+    }
+  );
+}

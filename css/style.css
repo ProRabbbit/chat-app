@@ -174,3 +174,29 @@ h1 {
     margin-top:15px;
 
 }
+
+.chat-item{
+
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+
+}
+
+.chat-button{
+
+    flex:1;
+
+}
+
+.menu-button{
+
+    width:35px;
+
+}
+
+.chat-menu{
+
+    margin-left:15px;
+
+}
