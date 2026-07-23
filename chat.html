@@ -12,26 +12,74 @@
 
 <h1>チャット</h1>
 
-<div id="messages"></div>
+<div id="container">
 
-<br>
+    <div id="chat-list">
 
-<input
-type="text"
-id="message"
-placeholder="メッセージを入力">
+    </div>
 
-<button onclick="sendMessage()">
-送信
-</button>
+    <div id="chat-area">
+
+        <div id="messages"></div>
+
+        <br>
+
+        <input
+        type="text"
+        id="message"
+        placeholder="メッセージを入力">
+
+        <button onclick="sendMessage()">
+        送信
+        </button>
+
+    </div>
+
+</div>
 
 <p>ようこそ！</p>
 
 
 <script>
+let currentChatId = 1;
+
+async function loadChats() {
+
+    const response = await fetch(
+        "https://chat-app.issounino.workers.dev/api/chats?username=issou"
+    );
+
+    const chats = await response.json();
+
+    const list = document.getElementById("chat-list");
+
+    list.innerHTML = "";
+
+    chats.forEach(chat => {
+
+        list.innerHTML += `
+            <button onclick="selectChat(${chat.id})">
+                ${chat.name}
+            </button>
+            <br><br>
+        `;
+
+    });
+
+}
+
+function selectChat(chatId){
+
+    currentChatId = chatId;
+
+    loadMessages();
+
+}
 async function loadMessages() {
 
-    const response = await fetch("https://chat-app.issounino.workers.dev/api/messages?chat_id=1");
+    const response = await fetch(
+    `https://chat-app.issounino.workers.dev/api/messages?chat_id=${currentChatId}`
+);
 
     const messages = await response.json();
 
@@ -63,7 +111,7 @@ async function sendMessage() {
         },
         body: JSON.stringify({
     username: "issou",
-    chat_id: 1,
+    chat_id: currentChatId,
     message: message
 })
     });
@@ -71,13 +119,15 @@ async function sendMessage() {
     const result = await response.json();
 
     if (response.ok) {
-        alert("送信しました！");
         document.getElementById("message").value = "";
+
+loadMessages();
     } else {
         alert(result.message);
     }
 }
 
+loadChats();
 loadMessages();
 </script>
 
