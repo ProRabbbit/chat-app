@@ -66,7 +66,7 @@ await env.DB.prepare(
   }
 
   await env.DB.prepare(
-    "INSERT INTO messages (user_id, message) VALUES (?, ?)"
+    "INSERT INTO messages (chat_id, user_id, message) VALUES (?, ?)"
   )
   .bind(user.id, message)
   .run();
