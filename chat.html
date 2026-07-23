@@ -16,7 +16,15 @@
 
     <div id="chat-list">
 
-    </div>
+    <button id="new-chat" onclick="createChat()">
+        ＋ 新しいグループ
+    </button>
+
+    <hr>
+
+    <div id="chat-buttons"></div>
+
+</div>
 
     <div id="chat-area">
 
@@ -54,9 +62,9 @@ async function loadChats() {
 
     const chats = await response.json();
 
-    const list = document.getElementById("chat-list");
+    const list = document.getElementById("chat-buttons");
 
-    list.innerHTML = "";
+list.innerHTML = "";
 
     chats.forEach(chat => {
 
@@ -128,6 +136,16 @@ loadMessages();
     } else {
         alert(result.message);
     }
+}
+
+async function createChat(){
+
+    const name = prompt("グループ名を入力してください");
+
+    if(!name) return;
+
+    alert("次のステップでAPIを作ります");
+
 }
 
 loadChats();

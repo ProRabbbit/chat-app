@@ -141,3 +141,36 @@ h1 {
 
     margin: 15px;
 }
+
+#new-chat {
+
+    width: 100%;
+
+    padding: 12px;
+
+    margin-bottom: 15px;
+
+    border: none;
+
+    border-radius: 8px;
+
+    background: #57F287;
+
+    color: black;
+
+    font-weight: bold;
+
+    cursor: pointer;
+}
+
+#new-chat:hover {
+
+    background: #45d473;
+
+}
+
+#chat-buttons{
+
+    margin-top:15px;
+
+}
