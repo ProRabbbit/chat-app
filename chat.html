@@ -87,7 +87,7 @@ let currentChatId = 1;
 async function loadChats() {
 
     const response = await fetch(
-        "https://chat-app.issounino.workers.dev/api/chats?username=issou"
+        "/api/chats?username=issou"
     );
 
     const chats = await response.json();
@@ -161,7 +161,7 @@ function selectChat(chatId){
 async function loadMessages() {
 
     const response = await fetch(
-    `https://chat-app.issounino.workers.dev/api/messages?chat_id=${currentChatId}`
+    `/api/messages?chat_id=${currentChatId}`
 );
 
     const messages = await response.json();
@@ -187,7 +187,7 @@ async function sendMessage() {
 
     const message = document.getElementById("message").value;
 
-    const response = await fetch("https://chat-app.issounino.workers.dev/api/send", {
+    const response = await fetch("/api/send", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
@@ -223,7 +223,7 @@ async function createChat() {
     console.log("fetch開始");
 
     const response = await fetch(
-        "https://chat-app.issounino.workers.dev/api/create-chat",
+        "/api/create-chat",
         {
             method: "POST",
             headers: {
@@ -255,7 +255,7 @@ async function deleteChat(chatId){
     if(!confirm("このグループを削除しますか？")) return;
 
     const response = await fetch(
-        "https://chat-app.issounino.workers.dev/api/delete-chat",
+        "/api/delete-chat",
         {
             method:"POST",
             headers:{
@@ -323,7 +323,7 @@ async function logout() {
 
 
     const response = await fetch(
-        "https://chat-app.issounino.workers.dev/api/logout",
+        "/api/logout",
         {
             method: "POST",
             credentials: "include"
