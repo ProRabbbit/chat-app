@@ -223,6 +223,38 @@ export default {
       return jsonResponse({ message: "削除しました" });
     }
 
+    if (url.pathname === "/api/logout" && request.method === "POST") {
+
+  const cookie = request.headers.get("Cookie") || "";
+
+  const match = cookie.match(/session=([^;]+)/);
+
+  if (!match) {
+    return jsonResponse({
+      message: "ログインしていません"
+    }, 401);
+  }
+
+  const token = match[1];
+
+  await env.DB.prepare(
+    "DELETE FROM sessions WHERE token = ?"
+  )
+  .bind(token)
+  .run();
+
+  return jsonResponse(
+    {
+      message: "ログアウトしました"
+    },
+    200,
+    {
+      "Set-Cookie":
+        "session=; Path=/; Max-Age=0; HttpOnly; Secure; SameSite=Lax"
+    }
+  );
+}
+
     // どのAPIにも一致しなかった場合
     return new Response("Not Found", {
       status: 404,
