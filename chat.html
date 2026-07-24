@@ -319,6 +319,24 @@ function openSettings() {
 
 }
 
+async function logout() {
+
+    const response = await fetch(
+        "https://chat-app.issounino.workers.dev/api/logout",
+        {
+            method: "POST",
+            credentials: "include"
+        }
+    );
+
+    if (response.ok) {
+
+        window.location.href = "login.html";
+
+    }
+
+}
+
 loadChats();
 loadMessages();
 </script>
