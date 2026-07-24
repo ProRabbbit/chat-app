@@ -225,6 +225,8 @@ export default {
 
     if (url.pathname === "/api/logout" && request.method === "POST") {
 
+    console.log(request.headers.get("Cookie"));
+
   const cookie = request.headers.get("Cookie") || "";
 
   const match = cookie.match(/session=([^;]+)/);
