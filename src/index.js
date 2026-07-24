@@ -95,7 +95,8 @@ export default {
         { message: "ログイン成功！" },
         200,
         {
-          "Set-Cookie": `session=${token}; Path=/; Max-Age=2592000; HttpOnly; Secure; SameSite=Lax`
+          "Set-Cookie":
+`session=${token}; Path=/; Max-Age=2592000; HttpOnly; Secure; SameSite=None`
         }
       );
     }
